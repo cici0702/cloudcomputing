@@ -26,7 +26,20 @@ document.getElementById('signUpForm').addEventListener('submit', function(event)
         return;
       }
       console.log('User registration successful');
-      window.location.href = 'success.html'; // Redirect to success page
+  
+      // Prompt user for verification code
+      var verificationCode = prompt('Enter the verification code you received via email:');
+  
+      // Verify the user's email
+      var cognitoUser = new AmazonCognitoIdentity.CognitoUser({ Username: username, Pool: userPool });
+      cognitoUser.confirmRegistration(verificationCode, true, function(err, result) {
+        if (err) {
+          alert(err.message || JSON.stringify(err));
+          return;
+        }
+        console.log('Email verification successful');
+        window.location.href = 'success.html'; // Redirect to success page
+      });
     });
   });
   
