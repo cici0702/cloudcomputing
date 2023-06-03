@@ -1,7 +1,7 @@
 // Initialize the Amazon Cognito credentials provider
 AWS.config.region = 'us-east-1';
 AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-  IdentityPoolId: 'YOUR_IDENTITY_POOL_ID'
+  IdentityPoolId: 'us-east-1:695e586b-8699-435b-bc68-acdf9621df36'
 });
 
 // Handle the form submission
