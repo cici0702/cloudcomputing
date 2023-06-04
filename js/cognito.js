@@ -34,7 +34,14 @@ document.getElementById('signInForm').addEventListener('submit', function(event)
 
   cognitoUser.authenticateUser(authenticationDetails, {
     onSuccess: function(result) {
-      window.location.href = 'success.html'; // Redirect to success page
+      // Store user data in localStorage after a successful authentication
+      localStorage.setItem('CognitoUser', JSON.stringify({
+        Username: username,
+        UserPoolId: poolData.UserPoolId,
+        ClientId: poolData.ClientId
+      }));
+  
+      window.location.href = 'upload.html'; // Redirect to success page
     },
     onFailure: function(err) {
       alert('Sign-in failed. Please try again.'); // Display error message
