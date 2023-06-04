@@ -38,7 +38,7 @@ document.getElementById('signUpForm').addEventListener('submit', function(event)
           return;
         }
         console.log('Email verification successful');
-        window.location.href = 'success.html'; // Redirect to success page
+        window.location.href = 'index.html'; // Redirect to success page
       });
     });
   });

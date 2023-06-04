@@ -34,7 +34,7 @@ document.getElementById('signInForm').addEventListener('submit', function(event)
 
   cognitoUser.authenticateUser(authenticationDetails, {
     onSuccess: function(result) {
-      window.location.href = 'success.html'; // Redirect to success page
+      window.location.href = 'upload.html'; // Redirect to success page
     },
     onFailure: function(err) {
       alert('Sign-in failed. Please try again.'); // Display error message
