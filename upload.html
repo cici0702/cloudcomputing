@@ -9,7 +9,6 @@
       margin: 0;
       padding: 0;
     }
-
     .container {
       max-width: 600px;
       margin: 0 auto;
@@ -18,41 +17,32 @@
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       border-radius: 8px;
     }
-
     h2 {
       text-align: center;
       color: #333333;
     }
-
     .form-container {
       margin-top: 20px;
     }
-
     .input-pair {
       margin-bottom: 10px;
     }
-
     .button-container {
       text-align: center;
       margin-top: 10px;
     }
-
     .tag-input {
       width: 200px;
     }
-
     .count-input {
       width: 50px;
     }
-
     .delete-container {
       margin-top: 20px;
     }
-
     .delete-input {
       width: 300px;
     }
-
     .delete-button {
       margin-left: 10px;
       background-color: #007bff;
@@ -64,16 +54,13 @@
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
-
     .delete-button:hover {
       background-color: #0056b3;
     }
-
     .delete-button:disabled {
       background-color: #cccccc;
       cursor: not-allowed;
     }
-
     .upload-input {
       display: flex;
     }
@@ -100,7 +87,6 @@
         AWS.config.credentials = new AWS.CognitoIdentityCredentials({
           IdentityPoolId: 'us-east-1:695e586b-8699-435b-bc68-acdf9621df36'
         });
-
         var storedUserData = JSON.parse(localStorage.getItem('CognitoUser'));
         var poolData = {
           UserPoolId: storedUserData.UserPoolId,
@@ -117,16 +103,12 @@
         window.cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
     }
 </script>
-
   
 </head>
 <body>
   <div class="container">
     <h2>FIT5225 Group 49 Assignment 2 </h2>
     <button id="logoutButton">Logout</button>
-    <h3>Made By(Alphabetical) Qian Duan, Tarek Hasan, Samia Senzuti, Meizhou Zhao</h3>
-    <h2>--------------------------------------------------------------------</h2>
-
     <form id="upload-form" enctype="multipart/form-data" class="form-container">
       <div>
         <h2>Query 0: The Upload Function</h2>
@@ -138,7 +120,6 @@
       </div>
       <h2>--------------------------------------------------------------------</h2>
     </form>
-
     <form id="search-form" onsubmit="searchImages(event)" class="form-container">
       <div id="input-container">
         <div class="input-pair">
@@ -149,45 +130,11 @@
           <input type="number" class="count-input" name="count-1" min="1" required>
         </div>
       </div>
-
       <div class="button-container">
         <button type="button" onclick="addInputFields()">+</button>
         <button type="button" onclick="removeInputFields()">-</button>
         <button type="submit">Search</button>
       </div>
-      <h2>--------------------------------------------------------------------</h2>
-    </form>
-
-
-    <div class="button-container">
-      <h2>Query 2: Search Picture by Tag</h2>
-      <input type="file" id="imageInput">
-      <button onclick="sendPostRequest()">Send POST Request</button>
-      <h2>--------------------------------------------------------------------</h2>
-    </div>
-
-
-    <h2>Query 3: Edit Image Tag</h2>
-    <form id="editForm">
-      <label for="imageName">Image Name:</label>
-      <input type="text" id="imageName" name="imageName" value="car.jpg"><br><br>
-      
-      <label for="tagType">Tag Type (0 or 1):</label>
-      <input type="number" id="tagType" name="tagType" value="1" min="0" max="1"><br><br>
-      
-      <div id="tagsContainer">
-        <div class="tagContainer">
-          <label for="tagName">Tag Name:</label>
-          <input type="text" class="tagName" name="tagName" value="person">
-          
-          <label for="tagCount">Tag Count:</label>
-          <input type="number" class="tagCount" name="tagCount" value="2" min="0">
-          <button type="button" class="removeTag">-</button>
-        </div>
-      </div>
-      <button type="button" id="addTag">Add Tag</button>
-      <input type="submit" value="Submit">
-      <h2>--------------------------------------------------------------------</h2>
     </form>
 
 
@@ -201,27 +148,26 @@
   
     </div>
 
-
+    
+    <h3>To Test Delete Function</h3>
+    <h4>https://r5lphjguqg.execute-api.us-east-1.amazonaws.com/app-prod/imagefile-storage/car.jpg</h4>
+  </div>
 
   <script>
     function uploadImage() {
       var fileInput = document.getElementById('image-file');
       var file = fileInput.files[0];
-
       if (file) {
         var formData = new FormData();
         formData.append('file', file);
-
         var uploadButton = document.getElementById('upload-button');
         uploadButton.disabled = true;
-
         // Fetch the file from the specified URL
         fetch(URL.createObjectURL(file))
           .then(response => response.blob()) // Convert the response to a Blob
           .then(blob => {
             // Append the Blob data to the formData object
             formData.set('file', blob, file.name);
-
             // Make the PUT request with the formData
             fetch('https://r5lphjguqg.execute-api.us-east-1.amazonaws.com/app-prod/imagefile-storage/' + file.name, {
               method: 'PUT',
@@ -247,11 +193,9 @@
           });
       }
     }
-
     function addInputFields() {
       var inputContainer = document.getElementById('input-container');
       var inputIndex = inputContainer.childElementCount + 1;
-
       var inputDiv = document.createElement('div');
       inputDiv.classList.add('input-pair');
       inputDiv.innerHTML = `
@@ -260,51 +204,39 @@
         <label for="count-${inputIndex}">Count:</label>
         <input type="number" class="count-input" name="count-${inputIndex}" min="1" required>
       `;
-
       inputContainer.appendChild(inputDiv);
     }
-
     function removeInputFields() {
       var inputContainer = document.getElementById('input-container');
       var inputDivs = inputContainer.getElementsByClassName('input-pair');
       var inputCount = inputDivs.length;
-
       if (inputCount > 1) {
         inputContainer.removeChild(inputDivs[inputCount - 1]);
       }
     }
-
     function searchImages(event) {
       event.preventDefault();
-
       var inputs = document.getElementsByClassName('tag-input');
       var tags = [];
-
       for (var i = 0; i < inputs.length; i++) {
         tags.push(inputs[i].value.trim());
       }
-
       inputs = document.getElementsByClassName('count-input');
       var counts = [];
-
       for (var i = 0; i < inputs.length; i++) {
         var count = parseInt(inputs[i].value);
         counts.push(count);
       }
-
       var searchURL = 'https://r5lphjguqg.execute-api.us-east-1.amazonaws.com/app-prod/tags?';
-
       for (var i = 0; i < tags.length; i++) {
         var tagParam = 'tag' + (i + 1);
         var countParam = 'tag' + (i + 1) + 'count';
         searchURL += tagParam + '=' + encodeURIComponent(tags[i]) + '&';
         searchURL += countParam + '=' + counts[i] + '&';
       }
-
       searchURL = searchURL.slice(0, -1);
       window.location.href = searchURL;
     }
-
     function deleteImage() {
       var deleteUrlInput = document.getElementById('delete-url-input');
       var deleteUrl = deleteUrlInput.value.trim();
@@ -336,176 +268,29 @@
       });
     }
 
-
-
-    document.getElementById("editForm").addEventListener("submit", function(event) {
-      event.preventDefault();
-      
-      // Get form values
-      var imageName = document.getElementById("imageName").value;
-      var tagType = parseInt(document.getElementById("tagType").value);
-      var tagName = document.getElementById("tagName").value;
-      var tagCount = parseInt(document.getElementById("tagCount").value);
-      
-      // Create JSON payload
-      var payload = {
-        "url": "s3://imagefile-storage/" + imageName,
-        "type": tagType,
-        "tags": [
-          {
-            "tag": tagName,
-            "count": tagCount
-          }
-        ]
-      };
-      
-      // Make POST request
-      fetch("https://r5lphjguqg.execute-api.us-east-1.amazonaws.com/app-prod/imagefile-storage/" + imageName, {
-        method: "POST",
-        body: JSON.stringify(payload)
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log("Response:", data);
-        // Handle response as needed
-      })
-      .catch(error => {
-        console.error("Error:", error);
-        // Handle error as needed
-      });
-    });
-
-
-
-    document.getElementById("addTag").addEventListener("click", function(event) {
-      event.preventDefault();
-      
-      var tagsContainer = document.getElementById("tagsContainer");
-      
-      var tagContainer = document.createElement("div");
-      tagContainer.classList.add("tagContainer");
-      
-      var tagNameInput = document.createElement("input");
-      tagNameInput.type = "text";
-      tagNameInput.classList.add("tagName");
-      tagNameInput.name = "tagName";
-      tagNameInput.value = "";
-      
-      var tagNameLabel = document.createElement("label");
-      tagNameLabel.for = "tagName";
-      tagNameLabel.textContent = "Tag Name:";
-      
-      var tagCountInput = document.createElement("input");
-      tagCountInput.type = "number";
-      tagCountInput.classList.add("tagCount");
-      tagCountInput.name = "tagCount";
-      tagCountInput.value = "0";
-      tagCountInput.min = "0";
-      
-      var tagCountLabel = document.createElement("label");
-      tagCountLabel.for = "tagCount";
-      tagCountLabel.textContent = "Tag Count:";
-      
-      var removeTagButton = document.createElement("button");
-      removeTagButton.type = "button";
-      removeTagButton.classList.add("removeTag");
-      removeTagButton.textContent = "-";
-      
-      tagContainer.appendChild(tagNameLabel);
-      tagContainer.appendChild(tagNameInput);
-      tagContainer.appendChild(tagCountLabel);
-      tagContainer.appendChild(tagCountInput);
-      tagContainer.appendChild(removeTagButton);
-      
-      tagsContainer.appendChild(tagContainer);
-    });
-    
-    document.getElementById("tagsContainer").addEventListener("click", function(event) {
-      if (event.target.classList.contains("removeTag")) {
-        var tagContainer = event.target.parentNode;
-        tagContainer.parentNode.removeChild(tagContainer);
-      }
-    });
-    
-    document.getElementById("editForm").addEventListener("submit", function(event) {
-      event.preventDefault();
-      
-      // Get form values
-      var imageName = document.getElementById("imageName").value;
-      var tagType = parseInt(document.getElementById("tagType").value);
-      
-      var tagContainers = document.getElementsByClassName("tagContainer");
-      var tags = [];
-      
-      for (var i = 0; i < tagContainers.length; i++) {
-        var tagName = tagContainers[i].querySelector(".tagName").value;
-        var tagCount = parseInt(tagContainers[i].querySelector(".tagCount").value);
-        
-        tags.push({
-          "tag": tagName,
-          "count": tagCount
-        });
-      }
-      
-      // Create JSON payload
-      var payload = {
-        "url": "s3://imagefile-storage/" + imageName,
-        "type": tagType,
-        "tags": tags
-      };
-      
-      // Make POST request
-      fetch("https://r5lphjguqg.execute-api.us-east-1.amazonaws.com/app-prod/imagefile-storage/" + imageName, {
-        method: "POST",
-        body: JSON.stringify(payload)
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log("Response:", data);
-        // Handle response as needed
-      })
-      .catch(error => {
-        console.error("Error:", error);
-        // Handle error as needed
-      });
-    });
-
     document.getElementById('logoutButton').addEventListener('click', function(event) {
   event.preventDefault(); // Prevent form submission
-
   // Retrieve user data from localStorage
   const userData = JSON.parse(localStorage.getItem('CognitoUser'));
-
   // Reconstruct poolData
   const poolData = {
     UserPoolId: userData.UserPoolId,
     ClientId: userData.ClientId
   };
-
   // Reconstruct userPool
   const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
-
   // Initialize Cognito user
   const cognitoUser = new AmazonCognitoIdentity.CognitoUser({
     Username: userData.Username,
     Pool: userPool
   });
-
   // Sign out
   cognitoUser.signOut();
-
   // Remove user data from localStorage
   localStorage.removeItem('CognitoUser');
-
   // Redirect to index.html
   window.location.href = 'index.html';
 });
-
-
-
-
-
-
   </script>
 </body>
 </html>
