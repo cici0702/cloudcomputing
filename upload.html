@@ -89,6 +89,35 @@
   </style>
   <script src="../js/amazon-cognito-identity.min.js"></script>
   <script src="https://sdk.amazonaws.com/js/aws-sdk-2.11.0.min.js"></script>
+  <script>
+    // Check if user data exists in localStorage
+    if (!localStorage.getItem('CognitoUser')) {
+        // If user data doesn't exist, redirect to login page
+        window.location.href = 'index.html';
+    } else {
+        // Initialize the Amazon Cognito credentials provider
+        AWS.config.region = 'us-east-1';
+        AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+          IdentityPoolId: 'us-east-1:695e586b-8699-435b-bc68-acdf9621df36'
+        });
+
+        var storedUserData = JSON.parse(localStorage.getItem('CognitoUser'));
+        var poolData = {
+          UserPoolId: storedUserData.UserPoolId,
+          ClientId: storedUserData.ClientId
+        };
+        
+        var userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+        
+        var userData = {
+          Username: storedUserData.Username,
+          Pool: userPool
+        };
+        
+        window.cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
+    }
+</script>
+
 </head>
 <body>
   <div class="container">
