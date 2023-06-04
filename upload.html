@@ -87,10 +87,13 @@
     }
     
   </style>
+  <script src="../js/amazon-cognito-identity.min.js"></script>
+  <script src="https://sdk.amazonaws.com/js/aws-sdk-2.11.0.min.js"></script>
 </head>
 <body>
   <div class="container">
     <h2>FIT5225 Group 49 - Image Upload, Search, and Delete</h2>
+    <button id="logoutButton">Logout</button>
     <form id="upload-form" enctype="multipart/form-data" class="form-container">
       <div>
         <label for="image-file">Select Image:</label>
@@ -262,6 +265,37 @@
         deleteUrlInput.value = ''; // Clear the input value
       });
     }
+
+    document.getElementById('logoutButton').addEventListener('click', function(event) {
+  event.preventDefault(); // Prevent form submission
+
+  // Retrieve user data from localStorage
+  const userData = JSON.parse(localStorage.getItem('CognitoUser'));
+
+  // Reconstruct poolData
+  const poolData = {
+    UserPoolId: userData.UserPoolId,
+    ClientId: userData.ClientId
+  };
+
+  // Reconstruct userPool
+  const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+
+  // Initialize Cognito user
+  const cognitoUser = new AmazonCognitoIdentity.CognitoUser({
+    Username: userData.Username,
+    Pool: userPool
+  });
+
+  // Sign out
+  cognitoUser.signOut();
+
+  // Remove user data from localStorage
+  localStorage.removeItem('CognitoUser');
+
+  // Redirect to index.html
+  window.location.href = 'index.html';
+});
   </script>
 </body>
 </html>
