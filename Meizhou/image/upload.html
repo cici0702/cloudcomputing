@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>FIT5225 GROUP 49</title>
+  <title>Image Upload, Search, and Delete</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -118,31 +118,25 @@
     }
 </script>
 
-  
 </head>
 <body>
   <div class="container">
-    <h2>FIT5225 Group 49 Assignment 2 </h2>
+    <h2>FIT5225 Group 49 - Image Upload, Search, and Delete</h2>
     <button id="logoutButton">Logout</button>
-    <h3>Made By(Alphabetical) Qian Duan, Tarek Hasan, Samia Senzuti, Meizhou Zhao</h3>
-    <h2>--------------------------------------------------------------------</h2>
-
     <form id="upload-form" enctype="multipart/form-data" class="form-container">
       <div>
-        <h2>Query 0: The Upload Function</h2>
-        <label for="image-file">Select an Image below:</label>
+        <label for="image-file">Select Image:</label>
         <div class="upload-input">
           <input type="file" id="image-file" accept="image/*" required>
           <button id="upload-button" type="button" onclick="uploadImage()">Upload</button>
         </div>
       </div>
-      <h2>--------------------------------------------------------------------</h2>
+    
     </form>
 
     <form id="search-form" onsubmit="searchImages(event)" class="form-container">
       <div id="input-container">
         <div class="input-pair">
-          <h2>Query 1: The Search Picture by Tag Function</h2>
           <label for="tag-1">Tag:</label>
           <input type="text" class="tag-input" name="tag-1" placeholder="Enter a tag" required>
           <label for="count-1">Count:</label>
@@ -155,53 +149,18 @@
         <button type="button" onclick="removeInputFields()">-</button>
         <button type="submit">Search</button>
       </div>
-      <h2>--------------------------------------------------------------------</h2>
     </form>
-
-
-    <div class="button-container">
-      <h2>Query 2: Search Picture by Tag</h2>
-      <input type="file" id="imageInput">
-      <button onclick="sendPostRequest()">Send POST Request</button>
-      <h2>--------------------------------------------------------------------</h2>
-    </div>
-
-
-    <h2>Query 3: Edit Image Tag</h2>
-    <form id="editForm">
-      <label for="imageName">Image Name:</label>
-      <input type="text" id="imageName" name="imageName" value="car.jpg"><br><br>
-      
-      <label for="tagType">Tag Type (0 or 1):</label>
-      <input type="number" id="tagType" name="tagType" value="1" min="0" max="1"><br><br>
-      
-      <div id="tagsContainer">
-        <div class="tagContainer">
-          <label for="tagName">Tag Name:</label>
-          <input type="text" class="tagName" name="tagName" value="person">
-          
-          <label for="tagCount">Tag Count:</label>
-          <input type="number" class="tagCount" name="tagCount" value="2" min="0">
-          <button type="button" class="removeTag">-</button>
-        </div>
-      </div>
-      <button type="button" id="addTag">Add Tag</button>
-      <input type="submit" value="Submit">
-      <h2>--------------------------------------------------------------------</h2>
-    </form>
-
 
     <div class="delete-container">
-      <h2>Query 4: Delete Image</h2>
-      <input type="text" id="delete-url-input" class="delete-input" placeholder="Enter the Delete URL">
+      <h2>Delete Image</h2>
+      <input type="text" id="delete-url-input" class="delete-input" placeholder="Enter image URL">
       <button onclick="deleteImage()" class="delete-button">Delete</button>
-      <h4>To Test the Delete Function, Input the URL below:</h4>
-      <p>https://r5lphjguqg.execute-api.us-east-1.amazonaws.com/app-prod/imagefile-storage/car.jpg</p>
-      <h4>the "car.jpg" could be change to any picture name in s3</h4>
-  
     </div>
 
-
+    
+    <h3>To Test Delete Function</h3>
+    <h4>https://r5lphjguqg.execute-api.us-east-1.amazonaws.com/app-prod/imagefile-storage/car.jpg</h4>
+  </div>
 
   <script>
     function uploadImage() {
@@ -336,140 +295,6 @@
       });
     }
 
-
-
-    document.getElementById("editForm").addEventListener("submit", function(event) {
-      event.preventDefault();
-      
-      // Get form values
-      var imageName = document.getElementById("imageName").value;
-      var tagType = parseInt(document.getElementById("tagType").value);
-      var tagName = document.getElementById("tagName").value;
-      var tagCount = parseInt(document.getElementById("tagCount").value);
-      
-      // Create JSON payload
-      var payload = {
-        "url": "s3://imagefile-storage/" + imageName,
-        "type": tagType,
-        "tags": [
-          {
-            "tag": tagName,
-            "count": tagCount
-          }
-        ]
-      };
-      
-      // Make POST request
-      fetch("https://r5lphjguqg.execute-api.us-east-1.amazonaws.com/app-prod/imagefile-storage/" + imageName, {
-        method: "POST",
-        body: JSON.stringify(payload)
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log("Response:", data);
-        // Handle response as needed
-      })
-      .catch(error => {
-        console.error("Error:", error);
-        // Handle error as needed
-      });
-    });
-
-
-
-    document.getElementById("addTag").addEventListener("click", function(event) {
-      event.preventDefault();
-      
-      var tagsContainer = document.getElementById("tagsContainer");
-      
-      var tagContainer = document.createElement("div");
-      tagContainer.classList.add("tagContainer");
-      
-      var tagNameInput = document.createElement("input");
-      tagNameInput.type = "text";
-      tagNameInput.classList.add("tagName");
-      tagNameInput.name = "tagName";
-      tagNameInput.value = "";
-      
-      var tagNameLabel = document.createElement("label");
-      tagNameLabel.for = "tagName";
-      tagNameLabel.textContent = "Tag Name:";
-      
-      var tagCountInput = document.createElement("input");
-      tagCountInput.type = "number";
-      tagCountInput.classList.add("tagCount");
-      tagCountInput.name = "tagCount";
-      tagCountInput.value = "0";
-      tagCountInput.min = "0";
-      
-      var tagCountLabel = document.createElement("label");
-      tagCountLabel.for = "tagCount";
-      tagCountLabel.textContent = "Tag Count:";
-      
-      var removeTagButton = document.createElement("button");
-      removeTagButton.type = "button";
-      removeTagButton.classList.add("removeTag");
-      removeTagButton.textContent = "-";
-      
-      tagContainer.appendChild(tagNameLabel);
-      tagContainer.appendChild(tagNameInput);
-      tagContainer.appendChild(tagCountLabel);
-      tagContainer.appendChild(tagCountInput);
-      tagContainer.appendChild(removeTagButton);
-      
-      tagsContainer.appendChild(tagContainer);
-    });
-    
-    document.getElementById("tagsContainer").addEventListener("click", function(event) {
-      if (event.target.classList.contains("removeTag")) {
-        var tagContainer = event.target.parentNode;
-        tagContainer.parentNode.removeChild(tagContainer);
-      }
-    });
-    
-    document.getElementById("editForm").addEventListener("submit", function(event) {
-      event.preventDefault();
-      
-      // Get form values
-      var imageName = document.getElementById("imageName").value;
-      var tagType = parseInt(document.getElementById("tagType").value);
-      
-      var tagContainers = document.getElementsByClassName("tagContainer");
-      var tags = [];
-      
-      for (var i = 0; i < tagContainers.length; i++) {
-        var tagName = tagContainers[i].querySelector(".tagName").value;
-        var tagCount = parseInt(tagContainers[i].querySelector(".tagCount").value);
-        
-        tags.push({
-          "tag": tagName,
-          "count": tagCount
-        });
-      }
-      
-      // Create JSON payload
-      var payload = {
-        "url": "s3://imagefile-storage/" + imageName,
-        "type": tagType,
-        "tags": tags
-      };
-      
-      // Make POST request
-      fetch("https://r5lphjguqg.execute-api.us-east-1.amazonaws.com/app-prod/imagefile-storage/" + imageName, {
-        method: "POST",
-        body: JSON.stringify(payload)
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log("Response:", data);
-        // Handle response as needed
-      })
-      .catch(error => {
-        console.error("Error:", error);
-        // Handle error as needed
-      });
-    });
-
     document.getElementById('logoutButton').addEventListener('click', function(event) {
   event.preventDefault(); // Prevent form submission
 
@@ -500,12 +325,6 @@
   // Redirect to index.html
   window.location.href = 'index.html';
 });
-
-
-
-
-
-
   </script>
 </body>
 </html>
